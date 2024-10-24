@@ -1,0 +1,13 @@
+::-webkit-scrollbar {
+	width: 0px;
+}
+
+head, body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+}
+
+WorkSpace {
+    display: block;
+}
