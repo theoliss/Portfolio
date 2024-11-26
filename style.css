@@ -11,3 +11,58 @@ head, body {
 WorkSpace {
     display: block;
 }
+
+.SkillDescription {
+    width: 30%;
+    position : absolute;
+    top : 20%;
+    right : 45%;
+    background-color: rgb(0, 0, 0);
+    opacity: 0.7;
+    color : white;
+    border-radius: 3%;
+    border : 5px solid black;
+    scale : 0;
+    transform-origin: top right;
+}
+
+.ExperienceDescription {
+    width: 40%;
+    position : absolute;
+    top : 30%;
+    right : 45%;
+    background-color: rgb(0, 0, 0);
+    opacity: 0.7;
+    color : white;
+    border-radius: 3%;
+    border : 5px solid black;
+    scale : 0;
+    transform-origin: center right;
+}
+
+.button{
+    box-shadow: 0px 1px 0px 0px #1c1b18;
+    background:linear-gradient(to bottom, #eae0c2 5%, #ccc2a6 100%);
+    background-color:#eae0c2;
+    border-radius:15px;
+    border:2px solid #333029;
+    display:inline-block;
+    cursor:pointer;
+    color:#000000;
+    font-family:Arial;
+    font-size:14px;
+    font-weight:bold;
+    padding:12px 16px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #ffffff;
+    float : right;
+}
+
+.button:hover {
+	background:linear-gradient(to bottom, #ccc2a6 5%, #eae0c2 100%);
+	background-color:#ccc2a6;
+}
+.button:active {
+	position:relative;
+	top:1px;
+}

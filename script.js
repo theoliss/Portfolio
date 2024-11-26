@@ -73,8 +73,8 @@ loader.load( './items/press.glb', function ( glb )
 let Cockpit;
 let cockpit_ready = false;
 let Cockpit_animation_mixer;
-let Cockpit_animation_mixer_2;
 let cockpit_animations;
+
 
 let Control_Pannel_0 = [];
 let Control_Pannel_1 = [];
@@ -82,7 +82,8 @@ let Control_Pannel_2 = [];
 let fake_green_buttons = [];
 let fake_buttons_matrix = [];
 let Current_Pannel = 0;
-const skill_buttons_name = ["3D_Printing","Arduino","Kicad","Rasp","Blender","CNC","Csharp","HTML_JS_CSS","Laser_Cutting","Metal_Lathe","PBC_Engraving","Python","Skill_Button_Bonus","SolidWorks","Three_JS"];
+const skill_buttons_name = ["3D_Printing","Arduino","Kicad","Rasp","Blender","CNC","Csharp","HTML_JS_CSS","Laser_Cutting","Metal_Lathe","PCB_Engraving","Python","Skill_Button_Bonus","SolidWorks","Three_JS"];
+const other_prupose_buttons_name = ["Red_Button", "Skills_Button","Experiences_Button","Contact_me_Button","Green_Button_Right","Green_Button_Left","Show_More_Button"];
 
 loader.load( './items/control_panel.glb', function ( glb ) 
 {
@@ -103,11 +104,11 @@ loader.load( './items/control_panel.glb', function ( glb )
     Control_Pannel_1.push(glb.scene.getObjectByName("HTML_JS_CSS"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Laser_Cutting"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Metal_Lathe"));
-    Control_Pannel_1.push(glb.scene.getObjectByName("PBC_Engraving"));
+    Control_Pannel_1.push(glb.scene.getObjectByName("PCB_Engraving"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Python"));
+    Control_Pannel_1.push(glb.scene.getObjectByName("SolidWorks"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Skill_Button_Bonus"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Skills_Button_Rings"));
-    Control_Pannel_1.push(glb.scene.getObjectByName("SolidWorks"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Three_JS"));
     Control_Pannel_1.push(glb.scene.getObjectByName("Central_Pannel_2"));
 
@@ -117,18 +118,25 @@ loader.load( './items/control_panel.glb', function ( glb )
     Control_Pannel_2.push(glb.scene.getObjectByName('Green_Button_Left_Ring'));
     Control_Pannel_2.push(glb.scene.getObjectByName('Green_Button_Right_Ring'));
     Control_Pannel_2.push(glb.scene.getObjectByName("Central_Pannel_2"));
+    Control_Pannel_2.push(glb.scene.getObjectByName("Show_More_Button"));
+    Control_Pannel_2.push(glb.scene.getObjectByName("Show_More_Button_ring"));
+
 
     fake_buttons_matrix.push(glb.scene.getObjectByName("Fake_Button_Matrix"));
     fake_buttons_matrix.push(glb.scene.getObjectByName("Central_Pannel_2"));
 
+
     fake_green_buttons.push(glb.scene.getObjectByName("Cube053_1"));
     fake_green_buttons.push(glb.scene.getObjectByName("Cube053"));
     fake_green_buttons.push(glb.scene.getObjectByName("Central_Pannel_2"));
+    fake_green_buttons.push(glb.scene.getObjectByName("Cube053_2"));
+    fake_green_buttons.push(glb.scene.getObjectByName("Cube053_3"));
 
 
     console.log(Control_Pannel_0);
     console.log(Control_Pannel_1);
     console.log(Control_Pannel_2);
+    console.log(fake_green_buttons)
 
     glb.scene.rotation.set(Math.PI/2,0,0);
     glb.scene.position.set(0,0,0);
@@ -145,19 +153,94 @@ loader.load( './items/control_panel.glb', function ( glb )
 
 let Mechanical_arm_animation_mixer;
 let animations;
+let mechanical_arm_animations_for_first_part = [];
+let mechanical_arm_animations_for_second_part = [];
 let mechanical_arm_ready = false;
 let arm_is_moving;
+
+let texture_loader = new THREE.TextureLoader();
+texture_loader.crossOrigin = "";
+
+let Skill_Description = document.getElementById("SkillDescription");
+let Skill_Description_End_button = document.getElementById("SkillDescriptionButton");
+let Skill_Description_End_tittle = document.getElementById("SkillDescriptionTittle");
+let Skill_Description_End_image = document.getElementById("SkillDescriptionImage");
+let Skill_Description_End_text = document.getElementById("SkillDescriptionText");
+
+let Skill_Description_Scale = 0;
+let Skill_Description_Show = false;
+Skill_Description_End_button.addEventListener("click", Skill_Description_Hide);
+let Skill_Cube;
+let skill_cube_material = new THREE.MeshStandardMaterial();
+let skills_texture_dict = 
+{
+    "3D_Printing" : "./items/textures/Skill_Cube/3D_Printing.png",
+    "Arduino" : "./items/textures/Skill_Cube/Arduino.png",
+    "Blender" : "./items/textures/Skill_Cube/Blender.png",
+    "CNC" : "./items/textures/Skill_Cube/CNC.png",
+    "Csharp" : "./items/textures/Skill_Cube/Csharp.png",
+    "HTML_JS_CSS" : "./items/textures/Skill_Cube/HTML_JS_CSS.png",
+    "Kicad" : "./items/textures/Skill_Cube/Kicad.png",
+    "Laser_Cutting" : "./items/textures/Skill_Cube/Laser_Cutting.png",
+    "Metal_Lathe" : "./items/textures/Skill_Cube/Metal_Lathe.png",
+    "PCB_Engraving" : "./items/textures/Skill_Cube/PCB_Engraving.png",
+    "Python" : "./items/textures/Skill_Cube/Python.png",
+    "Rasp" : "./items/textures/Skill_Cube/Rasp.png",
+    "SolidWorks" : "./items/textures/Skill_Cube/SolidWorks.png",
+    "Three_JS" : "./items/textures/Skill_Cube/Three_JS.png",
+    "Skill_Button_Bonus" : "./items/textures/Skill_Cube/Three_JS.png"
+}
+
+texture_loader.load(skills_texture_dict["3D_Printing"], function (e) {skill_cube_material.map = e});
+
 loader.load( './items/mecanical_arm.glb', function ( glb )
 {
     scene.add(glb.scene);
     glb.scene.rotation.set(Math.PI/2,0,0);
     glb.scene.position.set(0,0,0);
 
+    Skill_Cube = glb.scene.getObjectByName("skills_cube");
+    console.log(Skill_Cube);
+    Skill_Cube.material = skill_cube_material;
     animations = glb.animations;
+    console.log(animations);
+    for(let i = 0; i < animations.length; i++){
+        mechanical_arm_animations_for_first_part.push(THREE.AnimationUtils.subclip(animations[i], "mechanical_arm_1", 0, 81));
+        mechanical_arm_animations_for_second_part.push(THREE.AnimationUtils.subclip(animations[i], "mechanical_arm_2", 81, 1000));
+    }
     Mechanical_arm_animation_mixer = new THREE.AnimationMixer(glb.scene);
     mechanical_arm_ready = true;
     Mechanical_arm_animation_mixer.addEventListener( 'finished', () => {arm_is_moving = false} );
 });
+
+
+let Experience_Rotator;
+let Experience_Description = document.getElementById("ExperienceDescription");
+let Experience_Description_End_button = document.getElementById("ExperienceDescriptionButton");
+let Experience_Description_End_tittle = document.getElementById("ExperienceDescriptionTittle");
+let Experience_Description_End_image = document.getElementById("ExperienceDescriptionImage");
+let Experience_Description_End_text = document.getElementById("ExperienceDescriptionText");
+let Experience_Description_Scale = 0;
+let Experience_Description_Show = false;
+Experience_Description_End_button.addEventListener("click", Experience_Description_Hide);
+
+let project_name_list = ["Optical_Bench_Support", "Innovation_Trophies","Drawing_Bot", "Remote_Warhammer","Three_JS_Portfolio", "Personal_Projects","Board_Games", "KickStarter"];
+let project_mesh_list = [];
+let current_showned_project = 0;
+let number_of_rotation_done = 0;
+
+loader.load( './items/Experience_Stand.glb', function ( glb ) 
+{
+    scene.add(glb.scene);
+    Experience_Rotator = glb.scene.getObjectByName("Rotator_Center");
+    for (let i = 0; i < project_name_list.length; i++){
+        project_mesh_list.push(glb.scene.getObjectByName(project_name_list[i]));
+    }
+    glb.scene.rotation.set(Math.PI/2,0,0);
+    glb.scene.position.set(0,0,0);
+});
+
+
 
 function Show_Right_Pannel(target){
     Control_Pannel_0.forEach(element => {element.visible = false;});
@@ -198,11 +281,11 @@ function Go_To_This_Machine(choice)
             break;
         case 1 :
             Me_target_position = [17,-2.7,0];
-            Cockpit_target_position = [-14,5,-2];
+            Cockpit_target_position = [-14,7,-2];
             break;
         case 2 :
-            Me_target_position = [3,-2.7,0];
-            Cockpit_target_position = [-29,5,-4];
+            Me_target_position = [0,-2.7,0];
+            Cockpit_target_position = [-30,7,-3];
             break;
         case 3 :
             Me_target_position = [-15,-2.7,0];
@@ -226,8 +309,6 @@ function Go_To_This_Machine(choice)
     objects_currently_animating.push(Me.name);
 }
 
-
-
 function Animate_button(object){
     if( !(objects_currently_animating.includes(object.name)))
         {
@@ -238,52 +319,96 @@ function Animate_button(object){
             .easing(TWEEN.Easing.Cubic.InOut) // Easing function
             .onComplete(() => {
 
-                //triggers starts of event depending on which button where pressed :
+                //triggers which event to execute depending on which button where pressed at the end of push animation :
                 let action;
-                switch(object.name)
-                {
-                    case "Red_Button" :
-                        Animate_Press();
-                        Show_Right_Pannel(0);
-                        action = Cockpit_animation_mixer.clipAction(cockpit_animations[0]);
-                        action.clampWhenFinished = true;
-                        action.setLoop(THREE.LoopOnce).reset().play();
-                        Current_Pannel = 0;
-                        break;
-
-                    case "Skills_Button" :
-                        Go_To_This_Machine(1);
-                        Show_Right_Pannel(1);
-                        Current_Pannel = 1;
-                        action = Cockpit_animation_mixer.clipAction(cockpit_animations[2]);
-                        action.setLoop(THREE.LoopOnce).reset().play();
-                        break;
-
-                    
-                    case "Experiences_Button" :
-                        Go_To_This_Machine(2);
-                        Show_Right_Pannel(2);
-                        action = Cockpit_animation_mixer.clipAction(cockpit_animations[2]);
-                        action.setLoop(THREE.LoopOnce).reset().play();
-                        Current_Pannel = 2;
-                        break;
-
-                    case "Contact_me_Button" :
-                        Show_Right_Pannel(3);
-                        Go_To_This_Machine(3);
-                        Current_Pannel = 3;
-                        break;
-
-                    case "Green_Button_Right":
-                        if(!(arm_is_moving)){
-                            arm_is_moving = true;
-                            for (let i = 0; i < animations.length; i++) {
-                                Mechanical_arm_animation_mixer.clipAction(animations[i]).setLoop(THREE.LoopOnce).reset();
-                                Mechanical_arm_animation_mixer.clipAction(animations[i]).setLoop(THREE.LoopOnce).play();
-                            }
+                
+                if(skill_buttons_name.includes(object.name)){
+                    if(!(arm_is_moving))
+                        {
+                        texture_loader.load(skills_texture_dict[object.name], function (e) {skill_cube_material.map = e}); 
+                        arm_is_moving = true;
+                        for (let i = 0; i < mechanical_arm_animations_for_first_part.length; i++) {
+                            action = Mechanical_arm_animation_mixer.clipAction(mechanical_arm_animations_for_first_part[i]);
+                            action.clampWhenFinished = true;
+                            action.setLoop(THREE.LoopOnce).reset().play();
+                            
                         }
-                        break;
+                        Skill_Description_Get_Right_Content(object.name);
+                        Mechanical_arm_animation_mixer.addEventListener("finished", start_Skill_Description_Apparition);
+                    }
+                }
+                else
+                {
+                        
+                    switch(object.name)
+                    {
+                        case "Red_Button" :
+                            Animate_Press();
+                            Show_Right_Pannel(0);
+                            action = Cockpit_animation_mixer.clipAction(cockpit_animations[1]);
+                            action.clampWhenFinished = true;
+                            action.setLoop(THREE.LoopOnce).reset().play();
+                            Current_Pannel = 0;
+                            break;
 
+                        case "Skills_Button" :
+                            Go_To_This_Machine(1);
+                            Show_Right_Pannel(1);
+                            Current_Pannel = 1;
+                            action = Cockpit_animation_mixer.clipAction(cockpit_animations[2]);
+                            action.setLoop(THREE.LoopOnce).reset().play();
+                            break;
+
+                        
+                        case "Experiences_Button" :
+                            Go_To_This_Machine(2);
+                            Show_Right_Pannel(2);
+                            action = Cockpit_animation_mixer.clipAction(cockpit_animations[2]);
+                            action.setLoop(THREE.LoopOnce).reset().play();
+                            Current_Pannel = 2;
+                            break;
+
+                        case "Contact_me_Button" :
+                            Show_Right_Pannel(3);
+                            Go_To_This_Machine(3);
+                            Current_Pannel = 3;
+                            break;
+
+                        case "Green_Button_Right":
+                            tween = new TWEEN.Tween(Experience_Rotator.rotation)
+                            .to({ x: Experience_Rotator.rotation.x, y: Experience_Rotator.rotation.y-Math.PI/4, z: Experience_Rotator.rotation.z }, 300) // Target position and duration
+                            .onComplete(() => {
+                            }).start();
+                            objects_to_animate.push(tween);
+                            current_showned_project--;
+                            number_of_rotation_done++;
+                            if(current_showned_project < 0){current_showned_project = 7;}
+                            break;
+
+                        case "Green_Button_Left":
+                            tween = new TWEEN.Tween(Experience_Rotator.rotation)
+                            .to({ x: Experience_Rotator.rotation.x, y: Experience_Rotator.rotation.y+Math.PI/4, z: Experience_Rotator.rotation.z }, 300) // Target position and duration
+                            .onComplete(() => {
+                            }).start();
+                            objects_to_animate.push(tween);
+                            current_showned_project++;
+                            number_of_rotation_done--;
+                            if(current_showned_project > 7){current_showned_project = 0;}
+                            break;
+
+                        case "Show_More_Button":
+                            Exemple_Description_Get_Right_Content(project_name_list[current_showned_project]);
+                            let current_project_mesh = project_mesh_list[current_showned_project]; 
+                            console.log("number_of_rotation_done" , number_of_rotation_done);
+                            tween = new TWEEN.Tween(current_project_mesh.position)
+                            .to({ x: current_project_mesh.position.x+6.5*Math.sin(number_of_rotation_done*(Math.PI/4)), y: current_project_mesh.position.y+3.5, z: current_project_mesh.position.z+6.5*Math.cos((number_of_rotation_done*Math.PI/4))}, 300) // Target position and duration
+                            .onComplete(() => {
+                                start_Experience_Description_Apparition();
+                            }).start();
+                            objects_to_animate.push(tween);
+                            break;
+
+                    }
                 }
                 tween = new TWEEN.Tween(object.position).to({x: object.position.x, y: object.position.y+0.15, z: object.position.z+0.05 }, 300)
                         .easing(TWEEN.Easing.Cubic.InOut)
@@ -295,14 +420,81 @@ function Animate_button(object){
                             })
                         .start();
                 objects_to_animate.push(tween);
-            })
+                
+            }
+        )
             .start();
             objects_to_animate.push(tween);
             objects_currently_animating.push(object.name);
         }
 }
 
+function Exemple_Description_Get_Right_Content(name){
+    Experience_Description_End_tittle.innerText = name;
+    console.log(name);
+}
 
+function Skill_Description_Get_Right_Content(name){
+    Skill_Description_End_tittle.innerText = name;
+    console.log(name);
+    Skill_Description_End_image.src = "./items/textures/Skill_Cube/" + name + ".png";
+    switch(name){
+        case "":
+            Skill_Description_End_text.innerText = "";
+            break;
+    }
+}
+
+const start_Skill_Description_Apparition = function () {
+    Skill_Description_Show = true;
+    Mechanical_arm_animation_mixer.removeEventListener("finished", start_Skill_Description_Apparition);
+}
+
+function Skill_Description_Appear(){
+    if(Skill_Description_Scale <= 1) {
+        Skill_Description_Scale += 0.05;
+        Skill_Description.style.scale = Skill_Description_Scale;
+    }
+}
+
+const start_Experience_Description_Apparition = function () {
+    Experience_Description_Show = true;
+}
+
+function Experience_Description_Appear(){
+    if(Experience_Description_Scale <= 1) {
+        Experience_Description_Scale += 0.05;
+        Experience_Description.style.scale = Experience_Description_Scale;
+    }
+}
+function Experience_Description_Hide(){
+    Experience_Description_Scale = 0; 
+    Experience_Description.style.scale = Experience_Description_Scale; 
+    Experience_Description_Show = false; 
+    let current_project_mesh = project_mesh_list[current_showned_project];
+    let tween = new TWEEN.Tween(current_project_mesh.position)
+    .to({ x: current_project_mesh.position.x-6.5*Math.sin(number_of_rotation_done*(Math.PI/4)), y: current_project_mesh.position.y-3.5, z: current_project_mesh.position.z-6.5*Math.cos((number_of_rotation_done*Math.PI/4))}, 300) // Target position and duration
+    .onComplete(() => {
+    }).start();
+    objects_to_animate.push(tween);
+}
+
+function Skill_Description_Hide() {
+    Skill_Description_Scale = 0; 
+    Skill_Description.style.scale = Skill_Description_Scale; 
+    Skill_Description_Show = false; 
+    
+    let action ;
+    if(!(arm_is_moving))
+        {
+        arm_is_moving = true;
+        Mechanical_arm_animation_mixer.stopAllAction();
+        for (let i = 0; i < mechanical_arm_animations_for_first_part.length; i++) {
+            action = Mechanical_arm_animation_mixer.clipAction(mechanical_arm_animations_for_second_part[i]);
+            action.setLoop(THREE.LoopOnce).reset().play();
+        }
+    }
+}
 
 function Animate_Press(){
     let position_in_list = objects_to_animate.length;
@@ -343,34 +535,37 @@ function Animate_Press(){
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 window.addEventListener('pointerdown', (event) => {
-    if(event.button === 0)
-    {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        raycaster.setFromCamera(mouse, camera);
-
-        const Children = scene.children;
-        const intersects = raycaster.intersectObjects(Children);
-
-        if (intersects.length > 0) {
-            let clickedObject;
-            for (let i = 0; i < intersects.length; i++)
+    if(Skill_Description_Show == false){
+        if(event.button === 0)
             {
-                clickedObject = intersects[i].object;
-                if(clickedObject.visible == true) 
-                {
-                    if(skill_buttons_name.includes(clickedObject.parent.name))   
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(mouse, camera);
+        
+                const Children = scene.children;
+                const intersects = raycaster.intersectObjects(Children);
+        
+                if (intersects.length > 0) {
+                    let clickedObject;
+                    for (let i = 0; i < intersects.length; i++)
                     {
-                        clickedObject = clickedObject.parent;
+                        clickedObject = intersects[i].object;
+                        if(clickedObject.visible == true && clickedObject.parent.visible == true) 
+                        {
+                            if(skill_buttons_name.includes(clickedObject.parent.name) || other_prupose_buttons_name.includes(clickedObject.parent.name))   
+                            {
+                                clickedObject = clickedObject.parent;
+                            }
+                            break;
+                        }
                     }
-                    break;
+                    console.log(clickedObject);
+                    if(other_prupose_buttons_name.includes(clickedObject.name) || skill_buttons_name.includes(clickedObject.name))
+                    {   
+                        Animate_button(clickedObject);
+                    }
                 }
             }
-            if(["Red_Button", "Skills_Button","Experiences_Button","Contact_me_Button","Green_Button_Right","Green_Button_Left"].includes(clickedObject.name) || skill_buttons_name.includes(clickedObject.name))
-            {
-                Animate_button(clickedObject);
-            }
-        }
     }
 });
 
@@ -388,7 +583,8 @@ window.addEventListener('resize', () => {
 let cockpit_clock = new THREE.Clock();
 let mechanical_arm_clock = new THREE.Clock();
 const animate = () => {
-    
+    if (Skill_Description_Show) { Skill_Description_Appear();}
+    if (Experience_Description_Show) { Experience_Description_Appear();}
     if (cockpit_ready) Cockpit_animation_mixer.update(cockpit_clock.getDelta());
     if (mechanical_arm_ready) Mechanical_arm_animation_mixer.update(mechanical_arm_clock.getDelta());
     requestAnimationFrame(animate);
