@@ -22,9 +22,14 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize( window.innerWidth, window.innerHeight);
 renderer.setPixelRatio( window.devicePixelRatio);
 
-const light = new THREE.PointLight( 0xffffff, 5, 0, 0.01 );
+const light = new THREE.PointLight( 0xffffff, 3, 0, 0.01 );
 light.position.set(29,-15,12);
 scene.add( light );
+
+const AmbientLightlight = new THREE.AmbientLight( 0xffffff, 0.1, 0, 0.01 );
+scene.add( AmbientLightlight );
+
+
 
 const groundGeom = new THREE.PlaneGeometry(1000,550);
 const groundMat = new THREE.MeshStandardMaterial({color : "grey"}); 
@@ -226,6 +231,7 @@ Experience_Description_End_button.addEventListener("click", Experience_Descripti
 
 let project_name_list = ["Optical_Bench_Support", "Innovation_Trophies","Drawing_Bot", "Remote_Warhammer","Three_JS_Portfolio", "Personal_Projects","Board_Games", "KickStarter"];
 let project_mesh_list = [];
+let project_text_list = [];
 let current_showned_project = 0;
 let number_of_rotation_done = 0;
 
@@ -235,7 +241,10 @@ loader.load( './items/Experience_Stand.glb', function ( glb )
     Experience_Rotator = glb.scene.getObjectByName("Rotator_Center");
     for (let i = 0; i < project_name_list.length; i++){
         project_mesh_list.push(glb.scene.getObjectByName(project_name_list[i]));
+        project_text_list.push(glb.scene.getObjectByName(project_name_list[i]+ "_Text" ));
     }
+    Show_Right_Project_Tittle()
+    console.log(project_text_list);
     glb.scene.rotation.set(Math.PI/2,0,0);
     glb.scene.position.set(0,0,0);
 });
@@ -285,7 +294,7 @@ function Go_To_This_Machine(choice)
             break;
         case 2 :
             Me_target_position = [0,-2.7,0];
-            Cockpit_target_position = [-30,7,-3];
+            Cockpit_target_position = [-30.2,7,-3];
             break;
         case 3 :
             Me_target_position = [-15,-2.7,0];
@@ -375,6 +384,7 @@ function Animate_button(object){
                             break;
 
                         case "Green_Button_Right":
+                            
                             tween = new TWEEN.Tween(Experience_Rotator.rotation)
                             .to({ x: Experience_Rotator.rotation.x, y: Experience_Rotator.rotation.y-Math.PI/4, z: Experience_Rotator.rotation.z }, 300) // Target position and duration
                             .onComplete(() => {
@@ -383,9 +393,15 @@ function Animate_button(object){
                             current_showned_project--;
                             number_of_rotation_done++;
                             if(current_showned_project < 0){current_showned_project = 7;}
+                            Show_Right_Project_Tittle();
                             break;
 
                         case "Green_Button_Left":
+                            for(let i = 0; i < project_text_list.length; i++)
+                            {
+                                if(object.name == project_text_list[i].name){ project_text_list[i].visible = true;}
+                                else{project_text_list[i].visible = false; }
+                            }
                             tween = new TWEEN.Tween(Experience_Rotator.rotation)
                             .to({ x: Experience_Rotator.rotation.x, y: Experience_Rotator.rotation.y+Math.PI/4, z: Experience_Rotator.rotation.z }, 300) // Target position and duration
                             .onComplete(() => {
@@ -394,10 +410,11 @@ function Animate_button(object){
                             current_showned_project++;
                             number_of_rotation_done--;
                             if(current_showned_project > 7){current_showned_project = 0;}
+                            Show_Right_Project_Tittle();
                             break;
 
                         case "Show_More_Button":
-                            Exemple_Description_Get_Right_Content(project_name_list[current_showned_project]);
+                            Experience_Description_Get_Right_Content(project_name_list[current_showned_project]);
                             let current_project_mesh = project_mesh_list[current_showned_project]; 
                             console.log("number_of_rotation_done" , number_of_rotation_done);
                             tween = new TWEEN.Tween(current_project_mesh.position)
@@ -429,7 +446,15 @@ function Animate_button(object){
         }
 }
 
-function Exemple_Description_Get_Right_Content(name){
+function Show_Right_Project_Tittle(){
+    for(let i = 0; i < project_text_list.length; i++)
+        {
+            if(project_name_list[current_showned_project] + "_Text" == project_text_list[i].name){ project_text_list[i].visible = true;}
+            else{project_text_list[i].visible = false; }
+        }
+}
+
+function Experience_Description_Get_Right_Content(name){
     Experience_Description_End_tittle.innerText = name;
     console.log(name);
 }
@@ -535,7 +560,7 @@ function Animate_Press(){
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 window.addEventListener('pointerdown', (event) => {
-    if(Skill_Description_Show == false){
+    if(Skill_Description_Show == false && Experience_Description_Show == false){
         if(event.button === 0)
             {
                 mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
