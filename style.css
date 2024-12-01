@@ -17,6 +17,7 @@ WorkSpace {
     position : absolute;
     top : 20%;
     right : 45%;
+    bottom: 20%;
     background-color: rgb(0, 0, 0);
     opacity: 0.7;
     color : white;
@@ -31,6 +32,7 @@ WorkSpace {
     position : absolute;
     top : 25%;
     right : 55%;
+    bottom: 18%;
     background-color: rgb(0, 0, 0);
     opacity: 0.7;
     color : white;
@@ -40,29 +42,38 @@ WorkSpace {
     transform-origin: center right;
 }
 
+.DescriptionTittle {
+    text-align : justify; 
+    text-justify: distribute;
+    font-size:5vh;
+}
+
+.DescriptionText {
+    text-align : justify; 
+    text-justify: distribute;
+    font-size:2.5vb;
+}
+
 .button{
-    box-shadow: 0px 1px 0px 0px #1c1b18;
     background:linear-gradient(to bottom, #eae0c2 5%, #ccc2a6 100%);
     background-color:#eae0c2;
-    border-radius:15px;
-    border:2px solid #333029;
+    border-radius:3vh;
     display:inline-block;
     cursor:pointer;
     color:#000000;
     font-family:Arial;
-    font-size:14px;
+    font-size: 1vi;
     font-weight:bold;
-    padding:12px 16px;
     text-decoration:none;
     text-shadow:0px 1px 0px #ffffff;
-    float : right;
+    position : absolute;
+    right : 0;
+    bottom : 0;
+    height: 3vi;
+    width: 10vi;
 }
 
 .button:hover {
 	background:linear-gradient(to bottom, #ccc2a6 5%, #eae0c2 100%);
 	background-color:#ccc2a6;
-}
-.button:active {
-	position:relative;
-	top:1px;
 }
