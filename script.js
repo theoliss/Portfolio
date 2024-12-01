@@ -204,10 +204,8 @@ loader.load( './items/mecanical_arm.glb', function ( glb )
     glb.scene.position.set(0,0,0);
 
     Skill_Cube = glb.scene.getObjectByName("skills_cube");
-    console.log(Skill_Cube);
     Skill_Cube.material = skill_cube_material;
     animations = glb.animations;
-    console.log(animations);
     for(let i = 0; i < animations.length; i++){
         mechanical_arm_animations_for_first_part.push(THREE.AnimationUtils.subclip(animations[i], "mechanical_arm_1", 0, 81));
         mechanical_arm_animations_for_second_part.push(THREE.AnimationUtils.subclip(animations[i], "mechanical_arm_2", 81, 1000));
@@ -244,7 +242,6 @@ loader.load( './items/Experience_Stand.glb', function ( glb )
         project_text_list.push(glb.scene.getObjectByName(project_name_list[i]+ "_Text" ));
     }
     Show_Right_Project_Tittle()
-    console.log(project_text_list);
     glb.scene.rotation.set(Math.PI/2,0,0);
     glb.scene.position.set(0,0,0);
 });
@@ -332,7 +329,6 @@ function Machine_Selection(choice){
     let tween_Me = new TWEEN.Tween(Me.position).to({x : Me_target_position[0], y: Me_target_position[1], z : Me_target_position[2]},2000)
                         .onComplete(() => {
                             if(choice == 3){
-                                console.log(Me.rotation);
                                 let tween_me_rotator = new TWEEN.Tween(Me.rotation).to({x : 0, y: Math.PI/2, z : 0},800).onComplete(() => {Able_To_Interact = true}).start();
                                 objects_to_animate.push(tween_me_rotator);
                                 let tween_rotator = new TWEEN.Tween(main_line_rotator.rotation).to({x : 0, y: Math.PI/2, z : 0},800).start();
@@ -430,7 +426,6 @@ function Animate_button(object){
                         case "Show_More_Button":
                             Experience_Description_Get_Right_Content(project_name_list[current_showned_project]);
                             let current_project_mesh = project_mesh_list[current_showned_project]; 
-                            console.log("number_of_rotation_done" , number_of_rotation_done);
                             tween = new TWEEN.Tween(current_project_mesh.position)
                             .to({ x: current_project_mesh.position.x+6.5*Math.sin(number_of_rotation_done*(Math.PI/4)), y: current_project_mesh.position.y+3.5, z: current_project_mesh.position.z+6.5*Math.cos((number_of_rotation_done*Math.PI/4))}, 300) // Target position and duration
                             .onComplete(() => {
@@ -485,60 +480,63 @@ function Show_Right_Project_Tittle(){
 }
 
 function Experience_Description_Get_Right_Content(name){
-    Experience_Description_tittle.innerText = name;
+    let tittle = name.replaceAll("_"," ");
+    Skill_Description_tittle.innerText = tittle;
+    Experience_Description_tittle.innerText = tittle;
     Experience_Description_image.src = "./items/textures/Experiences_Photos/" + name + ".png";
     switch(name){
-        case "Optical_Bench_Support": Skill_Description_text.innerText = 
-        "";break;
-        case "Innovation_Trophies": Skill_Description_text.innerText = 
-        "";break;
-        case "Drawing_Bot": Skill_Description_text.innerText = 
-        "";break;
-        case "Remote_Warhammer": Skill_Description_text.innerText = 
-        "";break;
-        case "Three_JS_Portfolio": Skill_Description_text.innerText = 
-        "";break;
-        case "Personal_Projects": Skill_Description_text.innerText = 
-        "";break;
-        case "Board_Games": Skill_Description_text.innerText = 
-        "";break;
-        case "KickStarter" : Skill_Description_text.innerText = 
-        "";break;
+        case "Optical_Bench_Support": Experience_Description_text.innerText = 
+        "Two years ago (2023), I was approached by my school's junior enterprise to design an optical bench support based on precise specifications. After analyzing the project's requirements, I created a 3D model, then a working prototype that I brought to life through CNC machining and 3D printing.";break;
+        case "Innovation_Trophies": Experience_Description_text.innerText = 
+        "For the past three years, I have been designing trophies for an indoor competition at my school for the staff. Each year, I tried to come up with new designs, combining various fabrication processes and materials.";break;
+        case "Drawing_Bot": Experience_Description_text.innerText = 
+        "My fourth year's project was to make a robot that is capable of drawing on walls. Thus, I constructed a base featuring stepper motors connected to plastic belts. The pen is held by a 3D-printed gear and rack, controlled by a servo motor. This project used and sharpend my skills in robotic, mecatronic and electronic.";break;
+        case "Remote_Warhammer": Experience_Description_text.innerText = 
+        "This project aims to reduce the distance between people during remote social interactions (remote meeting, remote gaming...). This project is composed of two tangible interfaces that are linked together. When an object is put on a table, it is then projected on the other one. Therefore this project can add realism to remote interactions.";break;
+        case "Three_JS_Portfolio": Experience_Description_text.innerText = 
+        "As you can see, I made a portfolio using 3D technology on web. This project started as a school project in which I put much effort into.";break;
+        case "Personal_Projects": Experience_Description_text.innerText = 
+        "As a maker, I am perpetualy making many projects that are capitalizing and augmenting my skill set.";break;
+        case "Board_Games": Experience_Description_text.innerText = 
+        "I developed a passion for designing board games during the COVID-19 lockdown. Since then, I have created five games and am considering commercializing some of them.";break;
+        case "KickStarter" : Experience_Description_text.innerText = 
+        "With friends, I co-created Mozaik and published it on Kickstarter. These leather coasters are designed to be modular, allowing them to be assembled together. This Kickstarter campaign reached 178% of its funding goal.";break;
     }
 }
 
 function Skill_Description_Get_Right_Content(name){
-    Skill_Description_tittle.innerText = name;
+    let tittle = name.replaceAll("_"," ");
+    Skill_Description_tittle.innerText = tittle;
     Skill_Description_image.src = "./items/textures/Skill_Cube/" + name + ".png";
     switch(name){
         case "Kicad" : Skill_Description_text.innerText =
-        "I have used Kicad in many electrical projects troughtout the years to make the design of any PCB involved into it."; break;
+        "I have used KiCad for numerous electrical projects over the years to design PCBs involved in them."; break;
         case "Rasp" : Skill_Description_text.innerText =
-        "I descovered RaspBerry Pi a long time ago but really put my hands into it during last year for my internship. Indeed I incorporated a way of tracking the electrical consuption of industrial machines using ModBus communication."; break;
+        "I discovered Raspberry Pi a long time ago and began exploring it in depth during my internship last year. I implemented a system to track the electrical consumption of industrial machines using ModBus communication."; break;
         case "Blender" : Skill_Description_text.innerText =
-        "I have been pationate by Blender since a long time. I learned how to use it by myself throught different projects."; break;
+        "I have been passionate about Blender for a long time, teaching myself and then to ohters how to use it through various projects."; break;
         case "CNC" : Skill_Description_text.innerText =
-        "Thanks to the many machines available at my school, I could apprehend how to use CNC machining on several materials (wood, aluminium, plexiglass...)"; break;
+        "Thanks to the many machines available at my school, I learned how to use CNC machining on different materials (wood, aluminum, plexiglass, etc.)."; break;
         case "Csharp" : Skill_Description_text.innerText =
-        "I took several class of C# during my achademical formation and used it in concret projects (especially on Unity projets)."; break;
+        "I took several C# classes during my academic training and applied the knowledge in practical projects (especially in Unity projects)."; break;
         case "HTML_JS_CSS" : Skill_Description_text.innerText =
-        "I discovered the great combination of HTML CSS JS during my academical formation and find it added value for deployng applications made for other projects."; break;
+        "I discovered the power of combining HTML, CSS, and JavaScript during my academic studies and found it valuable for deploying applications built for other projects."; break;
         case "Laser_Cutting" : Skill_Description_text.innerText =
-        "During my time at the FabLab of my school, I spend much time using the several machines we had. Laser cutting was a great way of making quick prototypes."; break;
+        "During my time at my school's FabLab, I spent a lot of time using various machines. Laser cutting proved to be an excellent tool for creating quick prototypes."; break;
         case "Metal_Lathe" : Skill_Description_text.innerText =
-        "I played with metal lathe during my time at the Devinci FabLab. I have made different kinds of objects thank to this technologies (rings, laser sabers...)"; break;
+        "I worked with a metal lathe during my time at the Devinci FabLab, crafting various objects using this technology (rings, lightsaber hilts, etc.)."; break;
         case "PCB_Engraving" : Skill_Description_text.innerText =
-        "Engraving PCB is a fast and clean way of making electrical circuit. I used this technology for many of my electrical projects. The added value of making its own PCB is the possibility of iterate much faster that when commanding it."; break;
+        "Engraving PCBs is a fast and clean method of creating electrical circuits. I used this technique for many electrical projects, appreciating the ability to iterate much faster than when ordering custom PCBs."; break;
         case "Python" : Skill_Description_text.innerText =
-        "I first started coding with python when I was pretty young. Now I used it for many project related to AI or data analysis."; break;
+        "I started coding in Python at a young age. Now, I use it for numerous projects, particularly those involving AI and data analysis."; break;
         case "SolidWorks" : Skill_Description_text.innerText =
-        "I use SolidWorks for every technical design needed for 3d printing or CNC machining. I have develloped my SolidWorks skills by making the CAO of the many projects I have done for 5 years now. I even somtime teach SolidWorks to the other member of the Devinci FabLab"; break;
+        "I use SolidWorks for all technical designs required for 3D printing or CNC machining. Over the past five years, I have honed my SolidWorks skills through numerous projects and even occasionally teach it to other members of the Devinci FabLab."; break;
         case "Three_JS" : Skill_Description_text.innerText =
-        "I discovered Three JS with this project you are currently witnessing. I would like to continue to devellop my skills in this field because I think it can add much value to the website of the product I could want to show in the future."; break;
+        "I discovered Three.js through the project you are currently viewing. I aim to further develop my skills in this field as I see its potential to enhance product websites."; break;
         case "3D_Printing": Skill_Description_text.innerText =
-        "This technology is the bare minimum for any FabLab. Therefore, during my time in the Devinci FabLab, I used it many times in several projects, teach this technology to other members and even participated in the fixing the machines of our fablab";break;
+        "This technology is an essential of any FabLab. During my time at the Devinci FabLab, I used it extensively, taught it to other members, and even participated in maintaining and repairing our machines.";break;
         case "Arduino": Skill_Description_text.innerText = 
-        "I started my journey into making electrical devices with Arduino and used it many times either for making robots, games or prototypes";break;
+        "I began creating electrical devices with Arduino, using it for various projects, including robots, games, and prototypes.";break;
         case "Skill_Button_Bonus" : Skill_Description_text.innerText =
         "I am really enjoyed by learning new things, so this button should be completed with a new skill soon..."; break;
     }
